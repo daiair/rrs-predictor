@@ -38,6 +38,8 @@ document.getElementById('predict').addEventListener('submit', function(event) {
                       dnar: Number(dnar), icu: Number(icu), sedation: Number(sedation), surgery: Number(surgery),
                       urgent: Number(urgent)};
 
+    document.getElementById('result').textContent = 'Predicting...';
+
     // POSTリクエストを送信
     fetch('https://rrs-predictor-uxzqpuryqa-uc.a.run.app/predict', {
         method: 'POST',
