@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prediction of ICU admission at RRS activation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <style>
+    .btn-group {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <main>
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="src/jmusmc.svg" alt="" width="180" height="92">
+        <h2>Prediction of ICU admission at RRS activation</h2>
+        <p class="lead">This web app predicts ICU admission at the time of RRS activation.</p>
+      </div>
+      <form id="predict">
+        <div class="col-md-6 mx-auto">
+          <div class="row g-4">
+            <div class="col-12">
+              <h4>Age</h4>
+              <div class="btn-group col-12" role="group" aria-label="Age">
+                <input type="radio" class="btn-check" name="age" id="age0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="age0">&lt; 20</label>
+
+                <input type="radio" class="btn-check" name="age" id="age20" value="20" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age20">20-29</label>
+
+                <input type="radio" class="btn-check" name="age" id="age30" value="30" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age30">30-39</label>
+
+                <input type="radio" class="btn-check" name="age" id="age40" value="40" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age40">40-49</label>
+
+                <input type="radio" class="btn-check" name="age" id="age50" value="50" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age50">50-59</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Age">
+                <input type="radio" class="btn-check" name="age" id="age60" value="60" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age60">60-69</label>
+
+                <input type="radio" class="btn-check" name="age" id="age70" value="70" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age70">70-79</label>
+
+                <input type="radio" class="btn-check" name="age" id="age80" value="80" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age80">80-89</label>
+
+                <input type="radio" class="btn-check" name="age" id="age90" value="90" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age90">90-99</label>
+
+                <input type="radio" class="btn-check" name="age" id="age100" value="100" autocomplete="off">
+                <label class="btn btn-outline-primary" for="age100">&gt; 99</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4>Sex</h4>
+              <div class="btn-group col-12" role="group" aria-label="Sex">
+                <input type="radio" class="btn-check" name="sex" id="sex0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="sex0">Male</label>
+
+                <input type="radio" class="btn-check" name="sex" id="sex1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sex1">Female</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4>CPC</h4>
+              <div class="btn-group col-12" role="group" aria-label="CPC">
+                <input type="radio" class="btn-check" name="cpc" id="cpc0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="cpc0">1-2</label>
+
+                <input type="radio" class="btn-check" name="cpc" id="cpc1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="cpc1">3-4</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>BMI</h4>
+              <div class="btn-group col-12 role=" group" aria-label="BMI">
+                <input type="radio" class="btn-check" name="bmi" id="bmi0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bmi0">&lt; 18</label>
+
+                <input type="radio" class="btn-check" name="bmi" id="bmi18" value="18" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bmi18">18-20</label>
+
+                <input type="radio" class="btn-check" name="bmi" id="bmi20" value="20" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bmi20">20-22</label>
+              </div>
+
+              <div class="btn-group col-12" role="group" aria-label="BMI">
+                <input type="radio" class="btn-check" name="bmi" id="bmi22" value="22" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bmi22">22-25</label>
+
+                <input type="radio" class="btn-check" name="bmi" id="bmi25" value="25" autocomplete="off">
+                <label class="btn btn-outline-primary" for="bmi25">&gt; 25</label>
+
+                <input type="radio" class="btn-check" name="bmi" id="bmi999" value="999" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="bmi999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4>Night time</h4>
+              <div class="btn-group col-12" role="group" aria-label="Night time">
+                <input type="radio" class="btn-check" name="night" id="night0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="night0">No</label>
+
+                <input type="radio" class="btn-check" name="night" id="night1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="night1">Yes</label>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4>Holiday</h4>
+              <div class="btn-group col-12" role="group" aria-label="Holiday">
+                <input type="radio" class="btn-check" name="holiday" id="holiday0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="holiday0">No</label>
+
+                <input type="radio" class="btn-check" name="holiday" id="holiday1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="holiday1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Who called RRS</h4>
+              <div class="btn-group col-12" role="group" aria-label="Who called the RRS">
+                <input type="radio" class="btn-check" name="caller" id="caller0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="caller0">Doctor</label>
+
+                <input type="radio" class="btn-check" name="caller" id="caller1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="caller1">Nurse</label>
+
+                <input type="radio" class="btn-check" name="caller" id="caller2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary" for="caller2">Others</label>
+
+                <input type="radio" class="btn-check" name="caller" id="caller3" value="3" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="caller3">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Reason for requesting RRS</h4>
+              <div class="btn-group col-12" role="group" aria-label="Reason for requesting RRS">
+                <input type="radio" class="btn-check" name="reason" id="reason0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason0">Desatuation</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason1">Tachypnea</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason2" value="2" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason2">Bradypnea</label>
+              </div>
+
+              <div class="btn-group col-12" role="group" aria-label="Reason for requesting RRS">
+                <input type="radio" class="btn-check" name="reason" id="reason3" value="3" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason3">Dyspnea</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason4" value="4" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason4">Hypotension</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason5" value="5" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason5">Bradycardia</label>
+              </div>
+
+              <div class="btn-group col-12" role="group" aria-label="Reason for requesting RRS">
+                <input type="radio" class="btn-check" name="reason" id="reason6" value="6" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason6">Tachycardia</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason7" value="7" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason7">Chest pain</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason8" value="8" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason8">Seizure</label>
+              </div>
+
+              <div class="btn-group col-12" role="group" aria-label="Reason for requesting RRS">
+                <input type="radio" class="btn-check" name="reason" id="reason9" value="9" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason9">Altered mental status</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason10" value="10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason10">Agitation</label>
+              </div>
+
+              <div class="btn-group col-12" role="group" aria-label="Reason for requesting RRS">
+                <input type="radio" class="btn-check" name="reason" id="reason11" value="11" autocomplete="off">
+                <label class="btn btn-outline-primary" for="reason11">Nurse concern</label>
+
+                <input type="radio" class="btn-check" name="reason" id="reason12" value="12" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="reason12">Others</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Worsening of consciousness</h4>
+              <div class="btn-group col-12" role="group" aria-label="Worsening of consciousness">
+                <input type="radio" class="btn-check" name="woc" id="woc0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="woc0">No</label>
+
+                <input type="radio" class="btn-check" name="woc" id="woc1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="woc1">Yes</label>
+
+                <input type="radio" class="btn-check" name="woc" id="woc99" value="99" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="woc99">Unkown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Body temperature at the time of RRS request</h4>
+              <div class="btn-group col-12" role="group" aria-label="Body temperature at the time of RRS request">
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_call0">&lt; 36.0</label>
+
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call360" value="36" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_call360">36.0-37.5</label>
+
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call375" value="37.5" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_call375">37.5-38.0</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Body temperature at the time of RRS request">
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call380" value="38" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_call380">38.0-39.0</label>
+
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call390" value="39" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_call390">&gt; 39.0</label>
+
+                <input type="radio" class="btn-check" name="kt_call" id="kt_call999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="kt_call999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Systolic blood pressure at the time of RRS request</h4>
+              <div class="btn-group col-12" role="group"
+                aria-label="Systolic blood pressure at the time of RRS request">
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_call0">&lt; 80</label>
+
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call80" value="80" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_call80">80-100</label>
+
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call100" value="100" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_call100">100-120</label>
+              </div>
+              <div class="btn-group col-12" role="group"
+                aria-label="Systolic blood pressure at the time of RRS request">
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call120" value="120" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_call120">120-140</label>
+
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call140" value="140" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_call140">&gt; 140</label>
+
+                <input type="radio" class="btn-check" name="sbp_call" id="sbp_call999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="sbp_call999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Heart rate pressure at the time of RRS request</h4>
+              <div class="btn-group col-12" role="group" aria-label="Heart rate at the time of RRS request">
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_call0">&lt; 70</label>
+
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call70" value="70" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_call70">70-90</label>
+
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call90" value="90" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_call90">90-110</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Heart rate at the time of RRS request">
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call110" value="110" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_call110">110-130</label>
+
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call130" value="130" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_call130">&gt; 140</label>
+
+                <input type="radio" class="btn-check" name="hr_call" id="hr_call999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="hr_call999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Respiratory rate pressure at the time of RRS request</h4>
+              <div class="btn-group col-12" role="group" aria-label="Respiratory rate at the time of RRS request">
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_call0">&lt; 16</label>
+
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call16" value="16" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_call16">16-20</label>
+
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call20" value="20" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_call20">20-24</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Respiratory rate at the time of RRS request">
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call24" value="24" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_call24">24-28</label>
+
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call28" value="28" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_call28">&gt; 28</label>
+
+                <input type="radio" class="btn-check" name="rr_call" id="rr_call999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="rr_call999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>SpO<sub>2</sub> at the time of RRS request</h4>
+              <div class="btn-group col-12" role="group" aria-label="SpO2 at the time of RRS request">
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_call0">&lt; 90</label>
+
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call90" value="90" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_call90">90-92</label>
+
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call92" value="92" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_call92">92-94</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="SpO2 at the time of RRS request">
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call94" value="94" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_call94">94-96</label>
+
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call96" value="96" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_call96">&gt; 96</label>
+
+                <input type="radio" class="btn-check" name="spo2_call" id="spo2_call999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="spo2_call999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Body temperature before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="Body temperature before the event">
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_pre0">&lt; 36.0</label>
+
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre360" value="36" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_pre360">36.0-37.5</label>
+
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre375" value="37.5" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_pre375">37.5-38.0</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Body temperature before the event">
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre380" value="38" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_pre380">38.0-39.0</label>
+
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre390" value="39" autocomplete="off">
+                <label class="btn btn-outline-primary" for="kt_pre390">&gt; 39.0</label>
+
+                <input type="radio" class="btn-check" name="kt_pre" id="kt_pre999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="kt_pre999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Systolic blood pressure before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="Systolic blood pressure before the event">
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_pre0">&lt; 80</label>
+
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre80" value="80" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_pre80">80-100</label>
+
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre100" value="100" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_pre100">100-120</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Systolic blood pressure before the event">
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre120" value="120" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_pre120">120-140</label>
+
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre140" value="140" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sbp_pre140">&gt; 140</label>
+
+                <input type="radio" class="btn-check" name="sbp_pre" id="sbp_pre999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="sbp_pre999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Heart rate pressure before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="Heart rate before the event">
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_pre0">&lt; 70</label>
+
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre70" value="70" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_pre70">70-90</label>
+
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre90" value="90" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_pre90">90-110</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Heart rate before the event">
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre110" value="110" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_pre110">110-130</label>
+
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre130" value="130" autocomplete="off">
+                <label class="btn btn-outline-primary" for="hr_pre130">&gt; 140</label>
+
+                <input type="radio" class="btn-check" name="hr_pre" id="hr_pre999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="hr_pre999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Respiratory rate pressure before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="Respiratory rate before the event">
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_pre0">&lt; 16</label>
+
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre16" value="16" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_pre16">16-20</label>
+
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre20" value="20" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_pre20">20-24</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="Respiratory rate before the event">
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre24" value="24" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_pre24">24-28</label>
+
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre28" value="28" autocomplete="off">
+                <label class="btn btn-outline-primary" for="rr_pre28">&gt; 28</label>
+
+                <input type="radio" class="btn-check" name="rr_pre" id="rr_pre999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="rr_pre999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>SpO<sub>2</sub> before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="SpO2 before the event">
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre0" value="0" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_pre0">&lt; 90</label>
+
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre90" value="90" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_pre90">90-92</label>
+
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre92" value="92" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_pre92">92-94</label>
+              </div>
+              <div class="btn-group col-12" role="group" aria-label="SpO2 before the event">
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre94" value="94" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_pre94">94-96</label>
+
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre96" value="96" autocomplete="off">
+                <label class="btn btn-outline-primary" for="spo2_pre96">&gt; 96</label>
+
+                <input type="radio" class="btn-check" name="spo2_pre" id="spo2_pre999" value="999" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="spo2_pre999">Unknown</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Oxygen administration before the event</h4>
+              <div class="btn-group col-12" role="group" aria-label="Oxygen administration before the event">
+                <input type="radio" class="btn-check" name="preo2" id="preo20" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="preo20">No</label>
+
+                <input type="radio" class="btn-check" name="preo2" id="preo21" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="preo21">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Cardiac arrest before arrival of RRS</h4>
+              <div class="btn-group col-12" role="group" aria-label="Cardiac arrest before arrival of RRS">
+                <input type="radio" class="btn-check" name="cpa" id="cpa0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="cpa0">No</label>
+
+                <input type="radio" class="btn-check" name="cpa" id="cpa1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="cpa1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>DNAR before RRS call</h4>
+              <div class="btn-group col-12" role="group" aria-label="DNAR before RRS call">
+                <input type="radio" class="btn-check" name="dnar" id="dnar0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="dnar0">No</label>
+
+                <input type="radio" class="btn-check" name="dnar" id="dnar1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="dnar1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Within 72 hours of ICU discharge</h4>
+              <div class="btn-group col-12" role="group" aria-label="Within 72 hours of ICU discharge">
+                <input type="radio" class="btn-check" name="icu" id="icu0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="icu0">No</label>
+
+                <input type="radio" class="btn-check" name="icu" id="icu1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="icu1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Within 24 hours of sedation or general anesthesia</h4>
+              <div class="btn-group col-12" role="group" aria-label="Within 24 hours of Sedation or general anesthesia">
+                <input type="radio" class="btn-check" name="sedation" id="sedation0" value="0" autocomplete="off"
+                  checked>
+                <label class="btn btn-outline-primary" for="sedation0">No</label>
+
+                <input type="radio" class="btn-check" name="sedation" id="sedation1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="sedation1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Within 1 week of surgery</h4>
+              <div class="btn-group col-12" role="group" aria-label="Within 1 week of surgery">
+                <input type="radio" class="btn-check" name="surgery" id="surgery0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="surgery0">No</label>
+
+                <input type="radio" class="btn-check" name="surgery" id="surgery1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="surgery1">Yes</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <h4>Urgent surgery</h4>
+              <div class="btn-group col-12" role="group" aria-label="Urgent surgery">
+                <input type="radio" class="btn-check" name="urgent" id="urgent0" value="0" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="urgent0">No</label>
+
+                <input type="radio" class="btn-check" name="urgent" id="urgent1" value="1" autocomplete="off">
+                <label class="btn btn-outline-primary" for="urgent1">Yes</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-12" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success col-12" id="submit">Submit</button>
+          </div>
+          <div class="card" style="margin-top: 20px;">
+            <div class="card-body">
+              <h1 id="result" class="text-center">Result</h1>
+            </div>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <footer class="my-5 pt-5 text-body-secondary text-center text-small">
+      <p class="mb-1">&copy; 2024 Jichi Medical University Saitama Medical Center Critical Care Medicine</p>
+    </footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+  <script src="src/predict.js"></script>
+</body>
+
+</html>
